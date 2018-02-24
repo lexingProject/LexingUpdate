@@ -1,0 +1,230 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <data>
+
+        <import type="android.view.View" />
+
+        <import type="com.lexing360.app.lexingupdate.utils.BooleanUtils" />
+
+        <import type="android.text.TextUtils" />
+
+        <variable
+            name="model"
+            type="com.lexing360.app.lexingupdate.model.LayoutModel.DataBean" />
+
+        <variable
+            name="checked"
+            type="com.lexing360.app.lexingupdate.ui.LayoutActivity" />
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <include
+                android:id="@+id/preview"
+                layout="@layout/preview_layout" />
+        </FrameLayout>
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <TextView
+                    style="@style/style_CommonTextView"
+                    android:text="messageSettingId：" />
+
+                <EditText
+                    android:id="@+id/et_messageSettingId"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="最新需求-1/询价-2/报价-3"
+                    android:inputType="number"
+                    android:singleLine="true"
+                    android:text="1" />
+
+
+                <TextView
+                    style="@style/style_CommonTextView"
+                    android:text="name：" />
+
+                <EditText
+                    android:id="@+id/et_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="最新需求/询价/报价"
+                    android:singleLine="true"
+                    android:text="@{model.name}" />
+
+                <TextView
+                    style="@style/style_CommonTextView"
+                    android:text="redDot：" />
+
+                <RadioGroup
+                    android:id="@+id/rg_reddot"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <RadioButton
+                        android:id="@+id/rb_reddot_true"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:checked="@{BooleanUtils.convertToBoolean(model.redDot)}"
+                        android:text="ONE_DISAPPEAR" />
+
+                    <RadioButton
+                        android:id="@+id/rb_reddot_false"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="20dp"
+                        android:checked="@{!BooleanUtils.convertToBoolean(model.redDot)}"
+                        android:text="ALL_DISAPPEAR" />
+                </RadioGroup>
+
+                <TextView
+                    style="@style/style_CommonTextView"
+                    android:text="avatarurl："
+                    android:textSize="18sp" />
+
+                <RadioGroup
+                    android:id="@+id/rg_avatarurl"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <RadioButton
+                        android:id="@+id/rb_avatarurl_true"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:checked="@{model.avatarUrl}"
+                        android:text="true" />
+
+                    <RadioButton
+                        android:id="@+id/rb_avatarurl_false"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="20dp"
+                        android:checked="@{!model.avatarUrl}"
+                        android:text="false" />
+                </RadioGroup>
+
+                <TextView
+                    style="@style/style_CommonTextView"
+                    android:text="integration："
+                    android:textSize="18sp" />
+
+                <RadioGroup
+                    android:id="@+id/rg_integration"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <RadioButton
+                        android:id="@+id/rb_integration_true"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:checked="@{model.integration}"
+                        android:text="true" />
+
+                    <RadioButton
+                        android:id="@+id/rb_integration_false"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="20dp"
+                        android:checked="@{!model.integration}"
+                        android:text="false" />
+                </RadioGroup>
+
+                <TextView
+                    style="@style/style_CommonTextView"
+                    android:text="firstLabelOfLineOne：" />
+
+                <include
+                    android:id="@+id/fonttype_fitst_one"
+                    layout="@layout/item_layout_fonttype" />
+
+                <EditText
+                    android:id="@+id/textColor1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="textColor1"
+                    android:singleLine="true"
+                    android:text="@{model.firstLabelOfLineOne.textColor}" />
+
+                <TextView
+                    style="@style/style_CommonTextView"
+                    android:text="secondLabelOfLineOne：" />
+
+                <include
+                    android:id="@+id/fonttype_second_one"
+                    layout="@layout/item_layout_fonttype" />
+
+                <EditText
+                    android:id="@+id/textColor2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="textColor2"
+                    android:singleLine="true"
+                    android:text="@{model.secondLabelOfLineOne.textColor}" />
+
+                <TextView
+                    style="@style/style_CommonTextView"
+                    android:text="firstLabelOfLineTwo：" />
+
+                <include
+                    android:id="@+id/fonttype_first_two"
+                    layout="@layout/item_layout_fonttype" />
+
+                <EditText
+                    android:id="@+id/textColor3"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="textColor3"
+                    android:singleLine="true"
+                    android:text="@{model.firstLabelOfLineTwo.textColor}" />
+
+
+                <TextView
+                    style="@style/style_CommonTextView"
+                    android:text="secondLabelOfLineTwo：" />
+
+                <include
+                    android:id="@+id/fonttype_second_two"
+                    layout="@layout/item_layout_fonttype" />
+
+                <EditText
+                    android:id="@+id/textColor4"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="textColor4"
+                    android:singleLine="true"
+                    android:text="@{model.secondLabelOfLineTwo.textColor}" />
+
+                <TextView
+                    android:id="@+id/bt_put"
+                    android:layout_width="200dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginBottom="50dp"
+                    android:layout_marginTop="20dp"
+                    android:background="@color/colorPrimary"
+                    android:gravity="center"
+                    android:padding="20dp"
+                    android:text="put" />
+
+            </LinearLayout>
+        </ScrollView>
+    </LinearLayout>
+</layout>
