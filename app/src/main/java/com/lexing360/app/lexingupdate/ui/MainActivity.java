@@ -15,6 +15,7 @@ import com.lexing360.app.lexingupdate.base.BaseBindingAdapter;
 import com.lexing360.app.lexingupdate.base.RouterConstants;
 import com.lexing360.app.lexingupdate.databinding.ActivityMainBinding;
 
+import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.OkHttpClient;
@@ -25,15 +26,21 @@ import retrofit2.converter.gson.GsonConverterFactory;
 @Route(path = RouterConstants.MAIN)
 public class MainActivity extends BaseBindingActivity<ActivityMainBinding> {
 
-
+    ArrayList<String> list;
     @Override
     protected void bindData(ActivityMainBinding binding, Bundle savedInstanceState) {
         binding.rvList.setLayoutManager(new LinearLayoutManager(this));
         MainListAdapter adapter = new MainListAdapter(this);
         binding.rvList.setAdapter(adapter);
-        adapter.add("版本升级");
-        adapter.add("更新布局");
+        initListData(adapter);
         initListener(adapter);
+    }
+
+    private void initListData(MainListAdapter adapter) {
+        list = new ArrayList<>();
+        list.add("版本升级");
+        list.add("更新布局");
+        adapter.addAll(list);
     }
 
     private void initListener(MainListAdapter adapter) {
