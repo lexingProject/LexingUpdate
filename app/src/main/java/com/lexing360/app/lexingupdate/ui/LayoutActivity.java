@@ -365,6 +365,10 @@ public class LayoutActivity extends BaseBindingActivity<ActivityLayoutBinding> i
             Toast.makeText(this, "请先填写颜色值", Toast.LENGTH_SHORT).show();
             return;
         }
+        if (TextUtils.isEmpty(binding.etMessageSettingId.getText().toString())) {
+            Toast.makeText(this, "请先填写id", Toast.LENGTH_SHORT).show();
+            return;
+        }
         if (apiServices == null) {
             return;
         }
