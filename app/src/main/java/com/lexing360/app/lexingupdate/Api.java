@@ -29,6 +29,9 @@ import retrofit2.http.Path;
 
 public class Api {
 
+    public static final String URL_BASE_PRE = "http://gateway-";
+    public static final String URL_BASE_AFTER = ".lexing360.com/v1/";
+
     public static final String URL_BASE = "http://gateway-dev.lexing360.com/v1/";
 
     //更新升级

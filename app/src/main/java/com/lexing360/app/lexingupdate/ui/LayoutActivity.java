@@ -84,6 +84,10 @@ public class LayoutActivity extends BaseBindingActivity<ActivityLayoutBinding> i
         apiServices.getXmlInfo().enqueue(new Callback<LayoutModel>() {
             @Override
             public void onResponse(retrofit2.Call<LayoutModel> call, Response<LayoutModel> response) {
+                if (response.body() == null) {
+                    Toast.makeText(LayoutActivity.this,"获取当前服务器参数为空",Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 data = response.body().getData();
                 initView();
             }

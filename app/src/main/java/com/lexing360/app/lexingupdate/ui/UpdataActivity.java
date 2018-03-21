@@ -7,6 +7,8 @@ import android.widget.RadioGroup;
 import android.widget.Toast;
 
 import com.alibaba.android.arouter.facade.annotation.Route;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.lexing360.app.lexingupdate.Api;
 import com.lexing360.app.lexingupdate.R;
 import com.lexing360.app.lexingupdate.UpDataSubscriber;
@@ -20,10 +22,15 @@ import com.lexing360.app.lexingupdate.model.UpDatePutResponseModel;
 import com.lexing360.app.lexingupdate.utils.SPUtil;
 
 import java.util.HashMap;
+import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Flowable;
+import okhttp3.OkHttpClient;
 import retrofit2.Callback;
 import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 @Route(path = RouterConstants.UPDATA)
 public class UpdataActivity extends BaseBindingActivity<ActivityUpdataBinding> implements RadioGroup.OnCheckedChangeListener, View.OnClickListener {
@@ -37,6 +44,7 @@ public class UpdataActivity extends BaseBindingActivity<ActivityUpdataBinding> i
     String mChannel = "app";
     String jwt;
     String mUpdateApkUrl;
+    public Api.ApiServices apiServices;
 
     @Override
     protected void bindData(ActivityUpdataBinding binding, Bundle savedInstanceState) {
@@ -108,12 +116,13 @@ public class UpdataActivity extends BaseBindingActivity<ActivityUpdataBinding> i
             @Override
             public void onSucess(JwtModel responseModel) {
                 jwt = responseModel.getData().getJwt();
+                Log.e("666666",jwt);
                 Toast.makeText(UpdataActivity.this, "成功：" + jwt, Toast.LENGTH_SHORT).show();
             }
         });
     }
     private void getUpdateUrl() {
-        Log.e("666", Api.URL_BASE_UPDATE + mCurrrentVersion + "/" + mChannel);
+        Log.e("666", Api.URL_BASE_PRE+mChannel+Api.URL_BASE_AFTER + mCurrrentVersion + "/" + mChannel);
         apiServices.getUpdateUrl(mCurrrentVersion,mChannel).enqueue(new Callback<UpDateModel>() {
             @Override
             public void onResponse(retrofit2.Call<UpDateModel> call, Response<UpDateModel> response) {
@@ -124,18 +133,6 @@ public class UpdataActivity extends BaseBindingActivity<ActivityUpdataBinding> i
             public void onFailure(retrofit2.Call<UpDateModel> call, Throwable t) {
                 Toast.makeText(UpdataActivity.this, "获取升级链接失败:" + t.toString(), Toast.LENGTH_SHORT).show();
 
-            }
-        });
-    }
-
-    private void putUpDate() {
-        UpDatePutModel models = new UpDatePutModel();
-        models.setDownloadUrl(mUpdateApkUrl);
-        Flowable<UpDatePutResponseModel> observable = apiServices.putUpDate(jwt,mUpdateVersion, mChannel,models);
-        Api.subscribe(observable, new UpDataSubscriber<UpDatePutResponseModel>() {
-            @Override
-            public void onSucess(UpDatePutResponseModel response) {
-                Toast.makeText(UpdataActivity.this, "put升级:" + response.getMessage()+">>>"+response.getData().getVersion()+">>>"+response.getData().getDownloadUrl(), Toast.LENGTH_LONG).show();
             }
         });
     }
@@ -171,7 +168,36 @@ public class UpdataActivity extends BaseBindingActivity<ActivityUpdataBinding> i
                 }
             }
             group.check(checkedId);
+            initRetrofit();
         }
+    }
+
+    private void initRetrofit() {
+        OkHttpClient client = new OkHttpClient.Builder()
+                .connectTimeout(10000L, TimeUnit.MILLISECONDS)
+                .readTimeout(10000L, TimeUnit.MILLISECONDS)
+                .build();
+        Gson gson = new GsonBuilder().setLenient().create();
+        Retrofit retrofit = new Retrofit.Builder()
+                .client(client)
+                .baseUrl(Api.URL_BASE_PRE+mChannel+Api.URL_BASE_AFTER)
+                .addConverterFactory(GsonConverterFactory.create(gson))
+                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+                .build();
+        apiServices = retrofit.create(Api.ApiServices.class);
+    }
+
+    private void putUpDate() {
+        UpDatePutModel models = new UpDatePutModel();
+        models.setDownloadUrl(mUpdateApkUrl);
+        Flowable<UpDatePutResponseModel> observable = apiServices.putUpDate(jwt,mUpdateVersion, mChannel,models);
+        Log.e("6661", Api.URL_BASE_PRE+mChannel+Api.URL_BASE_AFTER + mUpdateVersion + "/" + mChannel);
+        Api.subscribe(observable, new UpDataSubscriber<UpDatePutResponseModel>() {
+            @Override
+            public void onSucess(UpDatePutResponseModel response) {
+                Toast.makeText(UpdataActivity.this, "put升级:" + response.getMessage()+">>>"+response.getData().getVersion()+">>>"+response.getData().getDownloadUrl(), Toast.LENGTH_LONG).show();
+            }
+        });
     }
 
 }
